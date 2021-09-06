@@ -1,6 +1,6 @@
 name: Test Setup
 runs:
-  using: "composite"
+  using: composite
   steps:
     - uses: actions/checkout@v2.3.4
     - name: Before cache
