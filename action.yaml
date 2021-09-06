@@ -4,8 +4,8 @@ runs:
   steps:
     - uses: actions/checkout@v2.3.4
     - name: Before cache
-    - run: mkdir -p /vendor/bundle
-    - name: Cache bundle directory
+      run: mkdir -p /vendor/bundle
+    - name: Cache bun dle directory
       uses: actions/cache@v2
       with:
         path: /vendor/bundle
