@@ -1,0 +1,21 @@
+name: Test Setup
+runs:
+  using: composite
+  steps:
+    - name: Before cache
+      run: mkdir -p /vendor/bundle
+      shell: bash
+    - name: Cache bun dle directory
+      uses: actions/cache@v2
+      with:
+        path: /vendor/bundle
+        key: ${{ runner.os }}-gemcash-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: ${{ runner.os }}-gemcash-
+    - name: Bundle install
+      working-directory: ./admin
+      run: bundle install -j8 --path /vendor/bundle
+      shell: bash
+    - name: Migrate
+      working-directory: ./admin
+      run: bundle exec ridgepole -c ./config/ridgepole.yml -f ./db/Schemafile -E test --apply --mysql-change-table-options
+      shell: bash
