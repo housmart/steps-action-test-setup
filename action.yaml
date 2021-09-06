@@ -4,6 +4,7 @@ runs:
   steps:
     - name: Before cache
       run: mkdir -p /vendor/bundle
+      shell: bash
     - name: Cache bun dle directory
       uses: actions/cache@v2
       with:
@@ -13,6 +14,8 @@ runs:
     - name: Bundle install
       working-directory: ./admin
       run: bundle install -j8 --path /vendor/bundle
+      shell: bash
     - name: Migrate
       working-directory: ./admin
       run: bundle exec ridgepole -c ./config/ridgepole.yml -f ./db/Schemafile -E test --apply --mysql-change-table-options
+      shell: bash
