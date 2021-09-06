@@ -1,0 +1,26 @@
+name: Test Setup
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  setup:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - name: Before cache
+        run: mkdir -p /vendor/bundle
+      - name: Cache bundle directory
+        uses: actions/cache@v2
+        with:
+          path: /vendor/bundle
+          key: ${{ runner.os }}-gemcash-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gemcash-
+      - name: Bundle install
+        working-directory: ./admin
+        run: bundle install -j8 --path /vendor/bundle
+      - name: Migrate
+        working-directory: ./admin
+        run: bundle exec ridgepole -c ./config/ridgepole.yml -f ./db/Schemafile -E test --apply --mysql-change-table-options
